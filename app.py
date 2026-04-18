@@ -33,8 +33,11 @@ except ImportError:
 # ─────────────────────────────────────────────────────────
 class Config:
     SECRET_KEY          = os.environ.get("SECRET_KEY", "civicpulse-dev-secret-2025")
-    DATABASE            = os.environ.get("DATABASE", "civicpulse.db")
-    UPLOAD_FOLDER       = os.environ.get("UPLOAD_FOLDER", "uploads")
+    
+    # Use Render persistent disk if available, else local directory
+    _data_dir = "/var/data" if os.path.exists("/var/data") else "."
+    DATABASE            = os.path.join(_data_dir, os.environ.get("DATABASE", "civicpulse.db"))
+    UPLOAD_FOLDER       = os.path.join(_data_dir, os.environ.get("UPLOAD_FOLDER", "uploads"))
 
     # ── Google Gemini AI ──────────────────────────────────
     GEMINI_API_KEY      = os.environ.get("GEMINI_API_KEY", "")   # ← paste your key
